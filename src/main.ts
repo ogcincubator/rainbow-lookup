@@ -4,8 +4,13 @@ import autocomplete from "@tarekraafat/autocomplete.js";
 import './style.css';
 
 export type AutocompleteOptions = {
-    onConceptScheme?: (conceptScheme: ConceptScheme | null) => void,
-    onConcept?: (concept: SKOSResource | null) => void,
+    onConceptSchemeSelected?: (conceptScheme: ConceptScheme | null) => void,
+    onConceptSelected?: (concept: SKOSResource | null) => void,
+    onConceptSchemeLoaded?: (conceptScheme: ConceptScheme, concepts: SKOSResource[]) => void,
+    noResults?: {
+        conceptSchemes?: string,
+        concepts?: string,
+    },
     placeholder?: {
         conceptScheme?: string,
         concept?: string,
@@ -13,15 +18,30 @@ export type AutocompleteOptions = {
 };
 
 export async function create(element: HTMLElement, sparqlEndpoint: string, options?: AutocompleteOptions) {
+    const noConceptSchemesFoundLabel = document.createElement("div");
+    noConceptSchemesFoundLabel.style.display = "none";
+    noConceptSchemesFoundLabel.innerHTML = options?.noResults?.concepts || 'No concept schemes found';
+
     const conceptSchemes = await loadConceptSchemes(sparqlEndpoint);
+
+    if (!conceptSchemes.length) {
+        element.append(noConceptSchemesFoundLabel);
+        return;
+    }
+
     const conceptSchemeInput = document.createElement("input");
     const conceptInput = document.createElement("input");
+    const noConceptsFoundLabel = document.createElement("div");
 
+    noConceptsFoundLabel.style.display = "none";
+    noConceptsFoundLabel.innerHTML = options?.noResults?.concepts || 'No concepts found';
     conceptInput.style.display = "none";
     element.append(conceptSchemeInput);
+    element.append(noConceptsFoundLabel);
     element.append(conceptInput);
 
     let conceptScheme: ConceptScheme | null = null;
+    let concepts: SKOSResource[] | null = null;
 
     const query = (q: string) => q.toLowerCase();
     const searchEngine = (query: string, record: SKOSResource)=> {
@@ -54,16 +74,27 @@ export async function create(element: HTMLElement, sparqlEndpoint: string, optio
                 focus() {
                     conceptSchemeAutocomplete.start();
                 },
-                selection (ev: any) {
-                    conceptScheme = ev.detail.selection.value;
+                async selection (ev: any) {
+                    const newConceptScheme = ev.detail.selection.value;
+                    if (conceptScheme && newConceptScheme?.uri === conceptScheme.uri) {
+                        return;
+                    }
+                    conceptScheme = newConceptScheme;
+                    conceptInput.style.display = 'none';
+                    conceptInput.value = '';
+                    noConceptsFoundLabel.style.display = 'none';
                     if (conceptScheme != null) {
                         conceptSchemeInput.value = conceptScheme.label;
-                        options?.onConceptScheme?.(conceptScheme);
-                        loadConcepts(sparqlEndpoint, conceptScheme!.uri)
-                            .then(() => {
-                                conceptInput.style.display = '';
-                                conceptInput.focus();
-                            });
+                        options?.onConceptSchemeSelected?.(conceptScheme);
+                        concepts = await loadConcepts(sparqlEndpoint, conceptScheme!.uri);
+                        options?.onConceptSchemeLoaded?.(conceptScheme, concepts);
+                        if (concepts.length) {
+                            conceptInput.style.display = '';
+                            conceptInput.focus();
+                            conceptAutocomplete.start();
+                        } else {
+                            noConceptsFoundLabel.style.display = '';
+                        }
                     }
                 }
             },
@@ -76,8 +107,9 @@ export async function create(element: HTMLElement, sparqlEndpoint: string, optio
         placeHolder: 'Concept',
         threshold: 0,
         data: {
-            src: async ()=> {
-                return conceptScheme!.concepts || [];
+            src: ()=> {
+                console.log('concepts', concepts);
+                return concepts || [];
             },
         },
         query,
@@ -97,7 +129,7 @@ export async function create(element: HTMLElement, sparqlEndpoint: string, optio
                 selection (ev: any) {
                     const concept = ev.detail.selection.value;
                     conceptInput.value = concept.label;
-                    options?.onConcept?.(concept);
+                    options?.onConceptSelected?.(concept);
                 }
             },
         },

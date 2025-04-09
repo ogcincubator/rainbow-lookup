@@ -15,11 +15,11 @@
         document.getElementById('rainbow-lookup'),
         'https://defs-dev.opengis.net/fuseki-hosted/query',
         {
-            onConceptScheme(conceptScheme) {
+            onConceptSchemeSelected(conceptScheme) {
                 document.getElementById('concept-scheme-label').textContent = conceptScheme?.label;
                 document.getElementById('concept-scheme-uri').textContent = conceptScheme?.uri;
             },
-            onConcept(concept) {
+            onConceptSelected(concept) {
                 document.getElementById('concept-label').textContent = concept?.label;
                 document.getElementById('concept-uri').textContent = concept?.uri;
             },
