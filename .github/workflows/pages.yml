@@ -23,7 +23,7 @@ jobs:
         run: |
           yarn
           yarn build
-          cp demo/index.html dist/
+          cp demo/* dist/
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload GitHub Pages artifact
