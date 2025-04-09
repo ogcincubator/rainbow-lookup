@@ -10,9 +10,10 @@
 <div id="rainbow-lookup"></div>
 <div>Selected concept scheme: <span id="concept-scheme-label"></span> <span id="concept-scheme-uri"></span></div>
 <div>Selected concept: <span id="concept-label"></span> <span id="concept-uri"></span></div>
+<div><button id="reset-button">Reset</button></div>
 <script src="rainbow-lookup.umd.cjs"></script>
 <script>
-    RainbowLookup.create(
+    const lookupInstance = RainbowLookup.create(
         document.getElementById('rainbow-lookup'),
         'https://defs-dev.opengis.net/fuseki-hosted/query',
         {
@@ -26,6 +27,7 @@
             },
         }
     );
+    document.getElementById('reset-button').addEventListener('click', () => lookupInstance.reset());
 </script>
 </body>
 </html>
