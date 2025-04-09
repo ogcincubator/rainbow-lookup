@@ -24,6 +24,10 @@ jobs:
           yarn
           yarn build
           cp demo/* dist/
+      - name: Add and commit
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'dist'
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload GitHub Pages artifact
