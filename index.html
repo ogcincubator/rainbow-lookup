@@ -16,6 +16,9 @@
         document.getElementById('rainbow-lookup'),
         'https://defs-dev.opengis.net/fuseki-hosted/query',
         {
+            loading: {
+                conceptSchemes: 'Loading initial data...'
+            },
             onConceptSchemeSelected(conceptScheme) {
                 document.getElementById('concept-scheme-label').textContent = conceptScheme?.label;
                 document.getElementById('concept-scheme-uri').textContent = conceptScheme?.uri;
