@@ -25,6 +25,10 @@ export type AutocompleteOptions = {
         conceptSchemes?: string;
         concepts?: string;
     };
+    inputClasses?: string | {
+        conceptScheme?: string;
+        concept?: string;
+    };
 };
 
 export type AutocompleteInstance = {
@@ -50,8 +54,16 @@ export function create(element: HTMLElement, sparqlEndpoint: string, options?: A
     let conceptScheme: ConceptScheme | null = null;
     let concepts: SKOSResource[] | null = null;
 
-    conceptSchemeInput.className = 'concept-scheme-input';
-    conceptInput.className = 'concept-input';
+    let conceptSchemeInputClasses, conceptInputClasses;
+    if (typeof options?.inputClasses === 'string') {
+        conceptSchemeInputClasses = conceptInputClasses = options?.inputClasses;
+    } else {
+        conceptSchemeInputClasses = options?.inputClasses?.conceptScheme || '';
+        conceptInputClasses = options?.inputClasses?.concept || '';
+    }
+
+    conceptSchemeInput.className = 'concept-scheme-input ' + conceptSchemeInputClasses;
+    conceptInput.className = 'concept-input ' + conceptInputClasses;
     noConceptsFoundLabel.className = 'no-results no-results-concepts';
     loadingConceptSchemesLabel.className = 'loading loading-concept-schemes';
     loadingConceptSchemesLabel.innerHTML = options?.loading?.conceptSchemes || 'Loading...';

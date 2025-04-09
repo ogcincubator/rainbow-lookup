@@ -6,15 +6,36 @@
     <title>Rainbow Lookup</title>
 </head>
 <body>
-<div id="rainbow-lookup"></div>
-<div>Selected concept scheme: <span id="concept-scheme-label"></span> <span id="concept-scheme-uri"></span></div>
-<div>Selected concept: <span id="concept-label"></span> <span id="concept-uri"></span></div>
-<div><button id="reset-button">Reset</button></div>
+<div class="container m-3">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div id="rainbow-lookup"></div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div>Selected concept scheme: <span id="concept-scheme-label"></span> <a id="concept-scheme-uri" target="_blank"></a></div>
+            <div>Selected concept: <span id="concept-label"></span> <a id="concept-uri" target="_blank"></a></div>
+            <div><button class="btn btn-primary" id="reset-button">Reset</button></div>
+        </div>
+    </div>
+</div>
+
 <script type="module">
+    import 'bootstrap/dist/css/bootstrap.min.css';
     import {create} from './src/main.ts';
+
+    let sparqlEndpoint = 'https://defs-dev.opengis.net/fuseki-hosted/query';
+    console.log("search", window.location.search);
+    if (window.location.search) {
+        const params = new URLSearchParams(window.location.search);
+        console.log('params', params);
+        console.log('param sparqlEndpoint', params.get('sparqlEndpoint'));
+        sparqlEndpoint = params.get('sparqlEndpoint') || sparqlEndpoint;
+    }
+    console.log('sparqlEndpoint', sparqlEndpoint)
+
     const lookupInstance = create(
         document.getElementById('rainbow-lookup'),
-        'https://defs-dev.opengis.net/fuseki-hosted/query',
+        sparqlEndpoint,
         {
             loading: {
                 conceptSchemes: 'Loading initial data...'
@@ -22,12 +43,19 @@
             onConceptSchemeSelected(conceptScheme) {
                 document.getElementById('concept-scheme-label').textContent = conceptScheme?.label;
                 document.getElementById('concept-scheme-uri').textContent = conceptScheme?.uri;
+                document.getElementById('concept-scheme-uri').href = conceptScheme?.uri;
             },
             onConceptSelected(concept) {
                 document.getElementById('concept-label').textContent = concept?.label;
                 document.getElementById('concept-uri').textContent = concept?.uri;
+                document.getElementById('concept-uri').href = concept?.uri;
             },
-        }
+            inputClasses: 'form-control',
+            errorMessages: {
+                conceptSchemes: '<span class="text-danger">Error loading concept schemes</span>',
+                concepts: '<span class="text-danger">Error loading concepts</span>',
+            },
+        },
     );
     document.getElementById('reset-button').addEventListener('click', () => lookupInstance.reset());
 </script>
