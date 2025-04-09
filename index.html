@@ -1,13 +1,30 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Rainbow Lookup</title>
+</head>
+<body>
+<div id="rainbow-lookup"></div>
+<div>Selected concept scheme: <span id="concept-scheme-label"></span> <span id="concept-scheme-uri"></span></div>
+<div>Selected concept: <span id="concept-label"></span> <span id="concept-uri"></span></div>
+<script type="module">
+    import {create} from './src/main.ts';
+    create(
+        document.getElementById('rainbow-lookup'),
+        'https://defs-dev.opengis.net/fuseki-hosted/query',
+        {
+            onConceptScheme(conceptScheme) {
+                document.getElementById('concept-scheme-label').textContent = conceptScheme?.label;
+                document.getElementById('concept-scheme-uri').textContent = conceptScheme?.uri;
+            },
+            onConcept(concept) {
+                document.getElementById('concept-label').textContent = concept?.label;
+                document.getElementById('concept-uri').textContent = concept?.uri;
+            },
+        }
+    );
+</script>
+</body>
 </html>
