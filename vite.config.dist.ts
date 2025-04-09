@@ -6,7 +6,7 @@ export default defineConfig({
             name: 'RainbowLookup',
             entry: './src/main.ts',
         },
-        outDir: './dist-local',
+        outDir: './dist',
         emptyOutDir: true,
     },
 });

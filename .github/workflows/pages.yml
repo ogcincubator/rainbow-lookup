@@ -11,6 +11,7 @@ jobs:
     permissions:
       pages: write
       id-token: write
+      contents: write
 
     runs-on: ubuntu-latest
 
@@ -22,7 +23,7 @@ jobs:
       - name: Build
         run: |
           yarn
-          yarn build
+          yarn dist
           cp demo/* dist/
       - name: Add and commit
         uses: EndBug/add-and-commit@v9

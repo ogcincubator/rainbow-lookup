@@ -1,11 +1,12 @@
 {
-  "name": "rainbow-lookup",
+  "name": "@ogc/rainbow-lookup",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "dist": "tsc && vite build --config vite.config.dist.ts",
     "preview": "vite preview"
   },
   "devDependencies": {
