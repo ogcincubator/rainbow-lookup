@@ -1,12 +1,8 @@
-import {defineConfig} from "vite";
+import {defineConfig, mergeConfig} from "vite";
+import baseConfig from "./vite.config";
 
-export default defineConfig({
+export default defineConfig(mergeConfig(baseConfig, {
     build: {
-        lib: {
-            name: 'RainbowLookup',
-            entry: './src/main.ts',
-        },
-        outDir: './dist',
-        emptyOutDir: true,
-    },
-});
+        outDir: './dist'
+    }
+}))
