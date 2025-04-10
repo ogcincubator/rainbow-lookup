@@ -51,8 +51,9 @@ export function create(element: HTMLElement, sparqlEndpoint: string, options?: A
     const loadingConceptsLabel = document.createElement("div");
     const conceptsErrorLabel = document.createElement("div");
 
-    let conceptScheme: ConceptScheme | null = null;
+    let selectedConceptScheme: ConceptScheme | null = null;
     let concepts: SKOSResource[] | null = null;
+    let selectedConcept: SKOSResource | null = null;
 
     let conceptSchemeInputClasses, conceptInputClasses;
     if (typeof options?.inputClasses === 'string') {
@@ -127,22 +128,22 @@ export function create(element: HTMLElement, sparqlEndpoint: string, options?: A
                         },
                         async selection(ev: any) {
                             const newConceptScheme = ev.detail.selection.value;
-                            if (conceptScheme && newConceptScheme?.uri === conceptScheme.uri) {
+                            if (selectedConceptScheme && newConceptScheme?.uri === selectedConceptScheme.uri) {
                                 return;
                             }
-                            conceptScheme = newConceptScheme;
+                            selectedConceptScheme = newConceptScheme;
                             conceptInput.style.display = 'none';
                             conceptInput.value = '';
                             noConceptsFoundLabel.style.display = 'none';
                             conceptsErrorLabel.style.display = 'none';
-                            if (conceptScheme != null) {
-                                conceptSchemeInput.value = conceptScheme.label;
-                                options?.onConceptSchemeSelected?.(conceptScheme);
+                            if (selectedConceptScheme != null) {
+                                conceptSchemeInput.value = selectedConceptScheme.label;
+                                options?.onConceptSchemeSelected?.(selectedConceptScheme);
                                 loadingConceptsLabel.style.display = "";
                                 try {
-                                    concepts = await loadConcepts(sparqlEndpoint, conceptScheme!.uri);
+                                    concepts = await loadConcepts(sparqlEndpoint, selectedConceptScheme!.uri);
 
-                                    options?.onConceptSchemeLoaded?.(conceptScheme, concepts);
+                                    options?.onConceptSchemeLoaded?.(selectedConceptScheme, concepts);
                                     if (concepts.length) {
                                         conceptInput.style.display = '';
                                         conceptInput.focus();
@@ -187,9 +188,9 @@ export function create(element: HTMLElement, sparqlEndpoint: string, options?: A
                             conceptAutocomplete.start();
                         },
                         selection(ev: any) {
-                            const concept = ev.detail.selection.value;
-                            conceptInput.value = concept.label;
-                            options?.onConceptSelected?.(concept);
+                            selectedConcept = ev.detail.selection.value;
+                            conceptInput.value = selectedConcept!.label;
+                            options?.onConceptSelected?.(selectedConcept);
                         }
                     },
                 },
@@ -205,7 +206,7 @@ export function create(element: HTMLElement, sparqlEndpoint: string, options?: A
 
     const reset = () => {
         conceptSchemeInput.value = '';
-        conceptScheme = null;
+        selectedConceptScheme = null;
         conceptInput.style.display = 'none';
         conceptInput.value = '';
         noConceptsFoundLabel.style.display = 'none';
@@ -213,7 +214,13 @@ export function create(element: HTMLElement, sparqlEndpoint: string, options?: A
         options?.onConceptSelected?.(null);
     };
 
+    const getSelection = () => ({
+        conceptScheme: selectedConceptScheme ? JSON.parse(JSON.stringify(selectedConceptScheme)) : null,
+        concept: selectedConcept ? JSON.parse(JSON.stringify(selectedConcept)) : null,
+    });
+
     return {
         reset,
+        getSelection,
     } as AutocompleteInstance;
 }
