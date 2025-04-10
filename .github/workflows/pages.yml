@@ -29,6 +29,7 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           add: 'dist'
+          message: 'Create dist'
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload GitHub Pages artifact
