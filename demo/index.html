@@ -20,7 +20,8 @@
 <div id="rainbow-lookup"></div>
 <div>Selected concept scheme: <span id="concept-scheme-label"></span> <a id="concept-scheme-uri" target="_blank"></a>
 </div>
-<div>Selected concept: <span id="concept-label"></span> <a id="concept-uri" target="_blank"></a></div>
+<div>Selected concept: <span id="concept-label"></span> <a id="concept-uri" target="_blank"></a> <button id="fetch-concept-metadata" style="display: none">Fetch metadata</button></div>
+<div><pre id="concept-metadata"></pre></div>
 <div>
     <button id="reset-button">Reset</button>
 </div>
@@ -92,6 +93,8 @@ const lookupInstance = RainbowLookup.create(
         const params = new URLSearchParams(window.location.search);
         sparqlEndpoint = params.get('sparqlEndpoint') || sparqlEndpoint;
     }
+    let selectedConcept = null;
+    const fetchConceptMetadataButton = document.getElementById('fetch-concept-metadata');
     const lookupInstance = RainbowLookup.create(
         document.getElementById('rainbow-lookup'),
         sparqlEndpoint,
@@ -102,13 +105,24 @@ const lookupInstance = RainbowLookup.create(
                 document.getElementById('concept-scheme-uri').href = conceptScheme?.uri;
             },
             onConceptSelected(concept) {
+                selectedConcept = concept;
                 document.getElementById('concept-label').textContent = concept?.label;
                 document.getElementById('concept-uri').textContent = concept?.uri;
                 document.getElementById('concept-uri').href = concept?.uri;
+                fetchConceptMetadataButton.style.display = concept ? '' : 'none';
+                document.getElementById('concept-metadata').textContent = '';
             },
         }
     );
     document.getElementById('reset-button').addEventListener('click', () => lookupInstance.reset());
+    fetchConceptMetadataButton.addEventListener('click', async () => {
+        const conceptMetadata = await fetch(selectedConcept.uri, {
+            headers: {
+                'Accept': 'application/ld+json',
+            },
+        });
+        document.getElementById('concept-metadata').textContent = await conceptMetadata.text();
+    });
 </script>
 </body>
 </html>
