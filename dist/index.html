@@ -9,120 +9,122 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.css">
 </head>
 <body>
-<ul class="nav nav-tabs mb-2">
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">Unstyled</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="bootstrap.html">Bootstrap</a>
-    </li>
-</ul>
-<div id="rainbow-lookup"></div>
-<div>Selected concept scheme: <span id="concept-scheme-label"></span> <a id="concept-scheme-uri" target="_blank"></a>
-</div>
-<div>Selected concept: <span id="concept-label"></span> <a id="concept-uri" target="_blank"></a> <button id="fetch-concept-metadata" style="display: none">Fetch metadata</button></div>
-<div><pre id="concept-metadata"></pre></div>
-<div>
-    <button id="reset-button">Reset</button>
-</div>
+  <div class="container m-3">
+    <ul class="nav nav-tabs mb-2">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Unstyled</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="bootstrap.html">Bootstrap</a>
+        </li>
+    </ul>
+    <div id="rainbow-lookup"></div>
+    <div>Selected concept scheme: <span id="concept-scheme-label"></span> <a id="concept-scheme-uri" target="_blank"></a>
+    </div>
+    <div>Selected concept: <span id="concept-label"></span> <a id="concept-uri" target="_blank"></a> <button id="fetch-concept-metadata" style="display: none">Fetch metadata</button></div>
+    <div><pre id="concept-metadata"></pre></div>
+    <div>
+        <button id="reset-button">Reset</button>
+    </div>
 
-<div style="margin: 2em; padding: 1em; border-radius: 4px; border: 1px solid #bbb; background: #eee">
-    <p>How to use the component:</p>
-    <ol>
-        <li>Create an HTML page with an empty <code>&lt;div&gt;</code>.</li>
-        <li>
-            Add the RainbowLookup
-            <a href="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.umd.js">script</a>
-            (and, optionally,
-            <a href="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.css">css</a>)
-            to your page.
-        </li>
-        <li>Instantiate the <code>RainbowLookup</code> in JavaScript:
-            <pre>const sparqlEndpoint = 'https://example.com/sparql';
-const myElement = document.getElementById('my-rainbow-lookup-element');
-const options = { /* ... */ };
-const lookupInstance = RainbowLookup.create(
-    myElement,
-    sparqlEndpoint,
-    options,
-);
-            </pre>
-        </li>
-    </ol>
-    <p>The following <code>options</code> can be passed to <code>RainbowLookup.create()</code>:</p>
-    <pre>export type AutocompleteOptions = {
-    onConceptSchemesLoaded?: (conceptSchemes: ConceptScheme[]) => void; // callback for when concept schemes are loaded
-    onConceptSchemeSelected?: (conceptScheme: ConceptScheme | null) => void; // callback for when a concept scheme is selected
-    onConceptSelected?: (concept: SKOSResource | null) => void; // callback for when a concept is selected
-    onConceptSchemeLoaded?: (conceptScheme: ConceptScheme, concepts: SKOSResource[]) => void; // callback for when a concept scheme's concepts have been loaded
-    onError?: (action: string, error: any) => void; // callback for errors. Action can be one of: 'loadConceptSchemes', 'loadConcepts'
-    loading?: {
-        conceptSchemes?: string; // Text for "Loading concept schemes..."
-        concepts?: string;       // Text for "Loading concepts..."
-    };
-    noResults?: {
-        conceptSchemes?: string; // Text to display when no concept schemes are found
-        concepts?: string;       // Text to display when no concepts are found
-    };
-    placeholder?: {
-        conceptScheme?: string;  // Placeholder for the concept scheme lookup field
-        concept?: string;        // Placeholder for the concept lookup field
-    };
-    errorMessages: {
-        conceptSchemes?: string; // Text to display for errors when retrieving the concept schemes
-        concepts?: string;       // Text to display for errors when retrieving concepts
-    };
-    inputClasses?: string | {  // DOM classes for the lookup input fields. A string here will apply to both fields.
-        conceptScheme?: string;
-        concept?: string;
-    };
-};</pre>
-    <p>The returned RainbowLookup instances expose the following methods:</p>
-    <ol>
-        <li><code>reset()</code>: Clears the lookup inputs and resets the component status.</li>
-        <li>
-            <code>getSelection()</code>: Returns an object with <code>conceptScheme</code>
-            and <code>concept</code> keys indicating the current selection.
-        </li>
-    </ol>
-</div>
-<script src="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.umd.js"></script>
-<script>
-    let sparqlEndpoint = 'https://defs-dev.opengis.net/fuseki-hosted/query';
-    if (window.location.search) {
-        const params = new URLSearchParams(window.location.search);
-        sparqlEndpoint = params.get('sparqlEndpoint') || sparqlEndpoint;
-    }
-    let selectedConcept = null;
-    const fetchConceptMetadataButton = document.getElementById('fetch-concept-metadata');
+    <div style="margin: 2em; padding: 1em; border-radius: 4px; border: 1px solid #bbb; background: #eee">
+        <p>How to use the component:</p>
+        <ol>
+            <li>Create an HTML page with an empty <code>&lt;div&gt;</code>.</li>
+            <li>
+                Add the RainbowLookup
+                <a href="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.umd.js">script</a>
+                (and, optionally,
+                <a href="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.css">css</a>)
+                to your page.
+            </li>
+            <li>Instantiate the <code>RainbowLookup</code> in JavaScript:
+                <pre>const sparqlEndpoint = 'https://example.com/sparql';
+    const myElement = document.getElementById('my-rainbow-lookup-element');
+    const options = { /* ... */ };
     const lookupInstance = RainbowLookup.create(
-        document.getElementById('rainbow-lookup'),
+        myElement,
         sparqlEndpoint,
-        {
-            onConceptSchemeSelected(conceptScheme) {
-                document.getElementById('concept-scheme-label').textContent = conceptScheme?.label;
-                document.getElementById('concept-scheme-uri').textContent = conceptScheme?.uri;
-                document.getElementById('concept-scheme-uri').href = conceptScheme?.uri;
-            },
-            onConceptSelected(concept) {
-                selectedConcept = concept;
-                document.getElementById('concept-label').textContent = concept?.label;
-                document.getElementById('concept-uri').textContent = concept?.uri;
-                document.getElementById('concept-uri').href = concept?.uri;
-                fetchConceptMetadataButton.style.display = concept ? '' : 'none';
-                document.getElementById('concept-metadata').textContent = '';
-            },
-        }
+        options,
     );
-    document.getElementById('reset-button').addEventListener('click', () => lookupInstance.reset());
-    fetchConceptMetadataButton.addEventListener('click', async () => {
-        const conceptMetadata = await fetch(selectedConcept.uri, {
-            headers: {
-                'Accept': 'application/ld+json',
-            },
-        });
-        document.getElementById('concept-metadata').textContent = await conceptMetadata.text();
-    });
-</script>
+                </pre>
+            </li>
+        </ol>
+        <p>The following <code>options</code> can be passed to <code>RainbowLookup.create()</code>:</p>
+        <pre>export type AutocompleteOptions = {
+        onConceptSchemesLoaded?: (conceptSchemes: ConceptScheme[]) => void; // callback for when concept schemes are loaded
+        onConceptSchemeSelected?: (conceptScheme: ConceptScheme | null) => void; // callback for when a concept scheme is selected
+        onConceptSelected?: (concept: SKOSResource | null) => void; // callback for when a concept is selected
+        onConceptSchemeLoaded?: (conceptScheme: ConceptScheme, concepts: SKOSResource[]) => void; // callback for when a concept scheme's concepts have been loaded
+        onError?: (action: string, error: any) => void; // callback for errors. Action can be one of: 'loadConceptSchemes', 'loadConcepts'
+        loading?: {
+            conceptSchemes?: string; // Text for "Loading concept schemes..."
+            concepts?: string;       // Text for "Loading concepts..."
+        };
+        noResults?: {
+            conceptSchemes?: string; // Text to display when no concept schemes are found
+            concepts?: string;       // Text to display when no concepts are found
+        };
+        placeholder?: {
+            conceptScheme?: string;  // Placeholder for the concept scheme lookup field
+            concept?: string;        // Placeholder for the concept lookup field
+        };
+        errorMessages: {
+            conceptSchemes?: string; // Text to display for errors when retrieving the concept schemes
+            concepts?: string;       // Text to display for errors when retrieving concepts
+        };
+        inputClasses?: string | {  // DOM classes for the lookup input fields. A string here will apply to both fields.
+            conceptScheme?: string;
+            concept?: string;
+        };
+    };</pre>
+        <p>The returned RainbowLookup instances expose the following methods:</p>
+        <ol>
+            <li><code>reset()</code>: Clears the lookup inputs and resets the component status.</li>
+            <li>
+                <code>getSelection()</code>: Returns an object with <code>conceptScheme</code>
+                and <code>concept</code> keys indicating the current selection.
+            </li>
+        </ol>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.umd.js"></script>
+  <script>
+      let sparqlEndpoint = 'https://defs-hosted.opengis.net/fuseki-hosted/query';
+      if (window.location.search) {
+          const params = new URLSearchParams(window.location.search);
+          sparqlEndpoint = params.get('sparqlEndpoint') || sparqlEndpoint;
+      }
+      let selectedConcept = null;
+      const fetchConceptMetadataButton = document.getElementById('fetch-concept-metadata');
+      const lookupInstance = RainbowLookup.create(
+          document.getElementById('rainbow-lookup'),
+          sparqlEndpoint,
+          {
+              onConceptSchemeSelected(conceptScheme) {
+                  document.getElementById('concept-scheme-label').textContent = conceptScheme?.label;
+                  document.getElementById('concept-scheme-uri').textContent = conceptScheme?.uri;
+                  document.getElementById('concept-scheme-uri').href = conceptScheme?.uri;
+              },
+              onConceptSelected(concept) {
+                  selectedConcept = concept;
+                  document.getElementById('concept-label').textContent = concept?.label;
+                  document.getElementById('concept-uri').textContent = concept?.uri;
+                  document.getElementById('concept-uri').href = concept?.uri;
+                  fetchConceptMetadataButton.style.display = concept ? '' : 'none';
+                  document.getElementById('concept-metadata').textContent = '';
+              },
+          }
+      );
+      document.getElementById('reset-button').addEventListener('click', () => lookupInstance.reset());
+      fetchConceptMetadataButton.addEventListener('click', async () => {
+          const conceptMetadata = await fetch(selectedConcept.uri, {
+              headers: {
+                  'Accept': 'application/ld+json',
+              },
+          });
+          document.getElementById('concept-metadata').textContent = await conceptMetadata.text();
+      });
+  </script>
 </body>
 </html>
