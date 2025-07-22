@@ -29,6 +29,8 @@ export type AutocompleteOptions = {
         conceptScheme?: string;
         concept?: string;
     };
+    conceptSchemeFilter?: (conceptScheme: ConceptScheme) => boolean;
+    conceptFilter?: (concept: SKOSResource, conceptScheme: ConceptScheme) => boolean;
 };
 
 export type AutocompleteInstance = {
@@ -78,6 +80,10 @@ export function create(element: HTMLElement, sparqlEndpoint: string, options?: A
 
     loadConceptSchemes(sparqlEndpoint)
         .then((conceptSchemes) => {
+
+            if (options?.conceptSchemeFilter) {
+                conceptSchemes = conceptSchemes.filter(options.conceptSchemeFilter);
+            }
 
             options?.onConceptSchemesLoaded?.(conceptSchemes);
 
@@ -142,6 +148,10 @@ export function create(element: HTMLElement, sparqlEndpoint: string, options?: A
                                 loadingConceptsLabel.style.display = "";
                                 try {
                                     concepts = await loadConcepts(sparqlEndpoint, selectedConceptScheme!.uri);
+
+                                    if (options?.conceptFilter) {
+                                        concepts = concepts.filter(c => options?.conceptFilter?.(c, selectedConceptScheme!));
+                                    }
 
                                     options?.onConceptSchemeLoaded?.(selectedConceptScheme, concepts);
                                     if (concepts.length) {
