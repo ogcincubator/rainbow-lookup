@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.css">
 </head>
 <body>
-<div class="container m-3">
+  <div class="container m-3">
     <ul class="nav nav-tabs mb-2">
       <li class="nav-item">
         <a class="nav-link" href="index.html">Unstyled</a>
@@ -27,36 +27,36 @@
             <div><button class="btn btn-primary" id="reset-button">Reset</button></div>
         </div>
     </div>
-</div>
-<script src="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.umd.js"></script>
-<script>
-    let sparqlEndpoint = 'https://defs-dev.opengis.net/fuseki-hosted/query';
-    if (window.location.search) {
-        const params = new URLSearchParams(window.location.search);
-        sparqlEndpoint = params.get('sparqlEndpoint') || sparqlEndpoint;
-    }
-    const lookupInstance = RainbowLookup.create(
-        document.getElementById('rainbow-lookup'),
-        sparqlEndpoint,
-        {
-            onConceptSchemeSelected(conceptScheme) {
-                document.getElementById('concept-scheme-label').textContent = conceptScheme?.label;
-                document.getElementById('concept-scheme-uri').textContent = conceptScheme?.uri;
-                document.getElementById('concept-scheme-uri').href = conceptScheme?.uri;
-            },
-            onConceptSelected(concept) {
-                document.getElementById('concept-label').textContent = concept?.label;
-                document.getElementById('concept-uri').textContent = concept?.uri;
-                document.getElementById('concept-uri').href = concept?.uri;
-            },
-            inputClasses: 'form-control',
-            errorMessages: {
-                conceptSchemes: '<span class="text-danger">Error loading concept schemes</span>',
-                concepts: '<span class="text-danger">Error loading concepts</span>',
-            },
-        },
-    );
-    document.getElementById('reset-button').addEventListener('click', () => lookupInstance.reset());
-</script>
+  </div>
+  <script src="https://cdn.jsdelivr.net/gh/ogcincubator/rainbow-lookup/dist/rainbow-lookup.umd.js"></script>
+  <script>
+      let sparqlEndpoint = 'https://defs-hosted.opengis.net/fuseki-hosted/query';
+      if (window.location.search) {
+          const params = new URLSearchParams(window.location.search);
+          sparqlEndpoint = params.get('sparqlEndpoint') || sparqlEndpoint;
+      }
+      const lookupInstance = RainbowLookup.create(
+          document.getElementById('rainbow-lookup'),
+          sparqlEndpoint,
+          {
+              onConceptSchemeSelected(conceptScheme) {
+                  document.getElementById('concept-scheme-label').textContent = conceptScheme?.label;
+                  document.getElementById('concept-scheme-uri').textContent = conceptScheme?.uri;
+                  document.getElementById('concept-scheme-uri').href = conceptScheme?.uri;
+              },
+              onConceptSelected(concept) {
+                  document.getElementById('concept-label').textContent = concept?.label;
+                  document.getElementById('concept-uri').textContent = concept?.uri;
+                  document.getElementById('concept-uri').href = concept?.uri;
+              },
+              inputClasses: 'form-control',
+              errorMessages: {
+                  conceptSchemes: '<span class="text-danger">Error loading concept schemes</span>',
+                  concepts: '<span class="text-danger">Error loading concepts</span>',
+              },
+          },
+      );
+      document.getElementById('reset-button').addEventListener('click', () => lookupInstance.reset());
+  </script>
 </body>
 </html>
