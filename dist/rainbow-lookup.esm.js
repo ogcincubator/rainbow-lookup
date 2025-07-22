@@ -1,4 +1,4 @@
-const te = {
+const ne = {
   FETCH_CONCEPT_SCHEMES: `
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
         SELECT DISTINCT ?cs (MIN(?lbl) as ?label) WHERE { ?cs a skos:ConceptScheme ; skos:prefLabel ?lbl }
@@ -12,10 +12,10 @@ const te = {
         ORDER BY ?label
     `
 }, K = {};
-function ce(f, E, t = "POST") {
+function ce(f, L, t = "POST") {
   return fetch(f, {
     method: t,
-    body: E,
+    body: L,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/sparql-query"
@@ -23,10 +23,10 @@ function ce(f, E, t = "POST") {
   });
 }
 async function ae(f) {
-  var E, t;
+  var L, t;
   if (!K.hasOwnProperty(f)) {
-    const w = await (await ce(f, te.FETCH_CONCEPT_SCHEMES)).json();
-    (t = (E = w == null ? void 0 : w.results) == null ? void 0 : E.bindings) != null && t.length ? K[f] = w.results.bindings.map((g) => ({
+    const w = await (await ce(f, ne.FETCH_CONCEPT_SCHEMES)).json();
+    (t = (L = w == null ? void 0 : w.results) == null ? void 0 : L.bindings) != null && t.length ? K[f] = w.results.bindings.map((g) => ({
       label: g.label.value,
       uri: g.cs.value,
       loading: !1,
@@ -35,29 +35,29 @@ async function ae(f) {
   }
   return K[f];
 }
-async function se(f, E) {
+async function le(f, L) {
   var w, g;
-  const t = await ae(f), C = t == null ? void 0 : t.find((p) => p.uri === E);
+  const t = await ae(f), C = t == null ? void 0 : t.find((h) => h.uri === L);
   if (!C)
     return [];
   if (C.concepts === null) {
     const v = await (await ce(
       f,
-      te.FETCH_CONCEPT_SCHEME_CONCEPTS.replace("@@CS_URI@@", E)
+      ne.FETCH_CONCEPT_SCHEME_CONCEPTS.replace("@@CS_URI@@", L)
     )).json();
-    (g = (w = v == null ? void 0 : v.results) == null ? void 0 : w.bindings) != null && g.length && (C.concepts = v.results.bindings.map((L) => ({
-      label: L.label.value,
-      uri: L.c.value
+    (g = (w = v == null ? void 0 : v.results) == null ? void 0 : w.bindings) != null && g.length && (C.concepts = v.results.bindings.map((O) => ({
+      label: O.label.value,
+      uri: O.c.value
     })));
   }
   return C.concepts || [];
 }
-function le(f) {
+function ue(f) {
   return f && f.__esModule && Object.prototype.hasOwnProperty.call(f, "default") ? f.default : f;
 }
 var Z = { exports: {} }, re;
-function ue() {
-  return re || (re = 1, function(f, E) {
+function se() {
+  return re || (re = 1, function(f, L) {
     var t;
     t = function() {
       function C(e, r) {
@@ -67,15 +67,15 @@ function ue() {
       }
       function w(e, r, n) {
         return (r = function(c) {
-          var a = function(s, u) {
-            if (typeof s != "object" || !s) return s;
-            var i = s[Symbol.toPrimitive];
+          var a = function(l, s) {
+            if (typeof l != "object" || !l) return l;
+            var i = l[Symbol.toPrimitive];
             if (i !== void 0) {
-              var o = i.call(s, u);
+              var o = i.call(l, s);
               if (typeof o != "object") return o;
               throw new TypeError("@@toPrimitive must return a primitive value.");
             }
-            return (u === "string" ? String : Number)(s);
+            return (s === "string" ? String : Number)(l);
           }(c, "string");
           return typeof a == "symbol" ? a : a + "";
         }(r)) in e ? Object.defineProperty(e, r, { value: n, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = n, e;
@@ -90,7 +90,7 @@ function ue() {
         }
         return n;
       }
-      function p(e) {
+      function h(e) {
         for (var r = 1; r < arguments.length; r++) {
           var n = arguments[r] != null ? arguments[r] : {};
           r % 2 ? g(Object(n), !0).forEach(function(c) {
@@ -111,12 +111,12 @@ function ue() {
 In order to be iterable, non-array objects must have a [Symbol.iterator]() method.`);
         }();
       }
-      function L(e) {
-        return L = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(r) {
+      function O(e) {
+        return O = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(r) {
           return typeof r;
         } : function(r) {
           return r && typeof Symbol == "function" && r.constructor === Symbol && r !== Symbol.prototype ? "symbol" : typeof r;
-        }, L(e);
+        }, O(e);
       }
       function k(e, r) {
         if (e) {
@@ -127,72 +127,72 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       }
       var A = function(e) {
         return typeof e == "string" ? document.querySelector(e) : e();
-      }, b = function(e, r) {
+      }, y = function(e, r) {
         var n = typeof e == "string" ? document.createElement(e) : e;
         for (var c in r) {
           var a = r[c];
           if (c === "inside") a.append(n);
           else if (c === "dest") A(a[0]).insertAdjacentElement(a[1], n);
           else if (c === "around") {
-            var s = a;
-            s.parentNode.insertBefore(n, s), n.append(s), s.getAttribute("autofocus") != null && s.focus();
+            var l = a;
+            l.parentNode.insertBefore(n, l), n.append(l), l.getAttribute("autofocus") != null && l.focus();
           } else c in n ? n[c] = a : n.setAttribute(c, a);
         }
         return n;
-      }, j = function(e, r) {
+      }, N = function(e, r) {
         return e = String(e).toLowerCase(), r ? e.normalize("NFD").replace(/[\u0300-\u036f]/g, "").normalize("NFC") : e;
-      }, I = function(e, r) {
-        return b("mark", p({ innerHTML: e }, typeof r == "string" && { class: r })).outerHTML;
-      }, S = function(e, r) {
+      }, H = function(e, r) {
+        return y("mark", h({ innerHTML: e }, typeof r == "string" && { class: r })).outerHTML;
+      }, E = function(e, r) {
         r.input.dispatchEvent(new CustomEvent(e, { bubbles: !0, detail: r.feedback, cancelable: !0 }));
       }, R = function(e, r, n) {
-        var c = n || {}, a = c.mode, s = c.diacritics, u = c.highlight, i = j(r, s);
-        if (r = String(r), e = j(e, s), a === "loose") {
-          var o = (e = e.replace(/ /g, "")).length, l = 0, d = Array.from(r).map(function(y, h) {
-            return l < o && i[h] === e[l] && (y = u ? I(y, u) : y, l++), y;
+        var c = n || {}, a = c.mode, l = c.diacritics, s = c.highlight, i = N(r, l);
+        if (r = String(r), e = N(e, l), a === "loose") {
+          var o = (e = e.replace(/ /g, "")).length, u = 0, d = Array.from(r).map(function(b, p) {
+            return u < o && i[p] === e[u] && (b = s ? H(b, s) : b, u++), b;
           }).join("");
-          if (l === o) return d;
+          if (u === o) return d;
         } else {
           var m = i.indexOf(e);
-          if (~m) return e = r.substring(m, m + e.length), m = u ? r.replace(e, I(e, u)) : r;
+          if (~m) return e = r.substring(m, m + e.length), m = s ? r.replace(e, H(e, s)) : r;
         }
       }, V = function(e, r) {
         return new Promise(function(n, c) {
           var a;
-          return (a = e.data).cache && a.store ? n() : new Promise(function(s, u) {
+          return (a = e.data).cache && a.store ? n() : new Promise(function(l, s) {
             return typeof a.src == "function" ? new Promise(function(i, o) {
               return a.src.constructor.name === "AsyncFunction" ? a.src(r).then(i, o) : i(a.src(r));
-            }).then(s, u) : s(a.src);
-          }).then(function(s) {
+            }).then(l, s) : l(a.src);
+          }).then(function(l) {
             try {
-              return e.feedback = a.store = s, S("response", e), n();
-            } catch (u) {
-              return c(u);
+              return e.feedback = a.store = l, E("response", e), n();
+            } catch (s) {
+              return c(s);
             }
           }, c);
         });
       }, ee = function(e, r) {
         var n = r.data, c = r.searchEngine, a = [];
-        n.store.forEach(function(u, i) {
+        n.store.forEach(function(s, i) {
           var o = function(m) {
-            var y = m ? u[m] : u, h = typeof c == "function" ? c(e, y) : R(e, y, { mode: c, diacritics: r.diacritics, highlight: r.resultItem.highlight });
-            if (h) {
-              var _ = { match: h, value: u };
+            var b = m ? s[m] : s, p = typeof c == "function" ? c(e, b) : R(e, b, { mode: c, diacritics: r.diacritics, highlight: r.resultItem.highlight });
+            if (p) {
+              var _ = { match: p, value: s };
               m && (_.key = m), a.push(_);
             }
           };
           if (n.keys) {
-            var l, d = function(m, y) {
-              var h = typeof Symbol < "u" && m[Symbol.iterator] || m["@@iterator"];
-              if (!h) {
-                if (Array.isArray(m) || (h = k(m)) || y) {
-                  h && (m = h);
+            var u, d = function(m, b) {
+              var p = typeof Symbol < "u" && m[Symbol.iterator] || m["@@iterator"];
+              if (!p) {
+                if (Array.isArray(m) || (p = k(m)) || b) {
+                  p && (m = p);
                   var _ = 0, Q = function() {
                   };
                   return { s: Q, n: function() {
                     return _ >= m.length ? { done: !0 } : { done: !1, value: m[_++] };
-                  }, e: function(H) {
-                    throw H;
+                  }, e: function(j) {
+                    throw j;
                   }, f: Q };
                 }
                 throw new TypeError(`Invalid attempt to iterate non-iterable instance.
@@ -200,22 +200,22 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
               }
               var z, G = !0, $ = !1;
               return { s: function() {
-                h = h.call(m);
+                p = p.call(m);
               }, n: function() {
-                var H = h.next();
-                return G = H.done, H;
-              }, e: function(H) {
-                $ = !0, z = H;
+                var j = p.next();
+                return G = j.done, j;
+              }, e: function(j) {
+                $ = !0, z = j;
               }, f: function() {
                 try {
-                  G || h.return == null || h.return();
+                  G || p.return == null || p.return();
                 } finally {
                   if ($) throw z;
                 }
               } };
             }(n.keys);
             try {
-              for (d.s(); !(l = d.n()).done; ) o(l.value);
+              for (d.s(); !(u = d.n()).done; ) o(u.value);
             } catch (m) {
               d.e(m);
             } finally {
@@ -223,116 +223,116 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
             }
           } else o();
         }), n.filter && (a = n.filter(a));
-        var s = a.slice(0, r.resultsList.maxResults);
-        r.feedback = { query: e, matches: a, results: s }, S("results", r);
-      }, F = "aria-expanded", B = "aria-activedescendant", q = "aria-selected", U = function(e, r) {
-        e.feedback.selection = p({ index: r }, e.feedback.results[r]);
+        var l = a.slice(0, r.resultsList.maxResults);
+        r.feedback = { query: e, matches: a, results: l }, E("results", r);
+      }, D = "aria-expanded", B = "aria-activedescendant", q = "aria-selected", U = function(e, r) {
+        e.feedback.selection = h({ index: r }, e.feedback.results[r]);
       }, J = function(e) {
-        e.isOpen || ((e.wrapper || e.input).setAttribute(F, !0), e.list.removeAttribute("hidden"), e.isOpen = !0, S("open", e));
-      }, N = function(e) {
-        e.isOpen && ((e.wrapper || e.input).setAttribute(F, !1), e.input.setAttribute(B, ""), e.list.setAttribute("hidden", ""), e.isOpen = !1, S("close", e));
+        e.isOpen || ((e.wrapper || e.input).setAttribute(D, !0), e.list.removeAttribute("hidden"), e.isOpen = !0, E("open", e));
+      }, P = function(e) {
+        e.isOpen && ((e.wrapper || e.input).setAttribute(D, !1), e.input.setAttribute(B, ""), e.list.setAttribute("hidden", ""), e.isOpen = !1, E("close", e));
       }, x = function(e, r) {
         var n = r.resultItem, c = r.list.getElementsByTagName(n.tag), a = !!n.selected && n.selected.split(" ");
         if (r.isOpen && c.length) {
-          var s, u, i = r.cursor;
-          e >= c.length && (e = 0), e < 0 && (e = c.length - 1), r.cursor = e, i > -1 && (c[i].removeAttribute(q), a && (u = c[i].classList).remove.apply(u, v(a))), c[e].setAttribute(q, !0), a && (s = c[e].classList).add.apply(s, v(a)), r.input.setAttribute(B, c[r.cursor].id), r.list.scrollTop = c[e].offsetTop - r.list.clientHeight + c[e].clientHeight + 5, r.feedback.cursor = r.cursor, U(r, e), S("navigate", r);
+          var l, s, i = r.cursor;
+          e >= c.length && (e = 0), e < 0 && (e = c.length - 1), r.cursor = e, i > -1 && (c[i].removeAttribute(q), a && (s = c[i].classList).remove.apply(s, v(a))), c[e].setAttribute(q, !0), a && (l = c[e].classList).add.apply(l, v(a)), r.input.setAttribute(B, c[r.cursor].id), r.list.scrollTop = c[e].offsetTop - r.list.clientHeight + c[e].clientHeight + 5, r.feedback.cursor = r.cursor, U(r, e), E("navigate", r);
         }
-      }, O = function(e) {
+      }, S = function(e) {
         x(e.cursor + 1, e);
       }, T = function(e) {
         x(e.cursor - 1, e);
       }, M = function(e, r, n) {
-        (n = n >= 0 ? n : e.cursor) < 0 || (e.feedback.event = r, U(e, n), S("selection", e), N(e));
+        (n = n >= 0 ? n : e.cursor) < 0 || (e.feedback.event = r, U(e, n), E("selection", e), P(e));
       };
       function W(e, r) {
         var n = this;
         return new Promise(function(c, a) {
-          var s, u;
-          return s = r || ((u = e.input) instanceof HTMLInputElement || u instanceof HTMLTextAreaElement ? u.value : u.innerHTML), function(o, l, d) {
-            return l ? l(o) : o.length >= d;
-          }(s = e.query ? e.query(s) : s, e.trigger, e.threshold) ? V(e, s).then(function(o) {
+          var l, s;
+          return l = r || ((s = e.input) instanceof HTMLInputElement || s instanceof HTMLTextAreaElement ? s.value : s.innerHTML), function(o, u, d) {
+            return u ? u(o) : o.length >= d;
+          }(l = e.query ? e.query(l) : l, e.trigger, e.threshold) ? V(e, l).then(function(o) {
             try {
-              return e.feedback instanceof Error ? c() : (ee(s, e), e.resultsList && function(l) {
-                var d = l.resultsList, m = l.list, y = l.resultItem, h = l.feedback, _ = h.matches, Q = h.results;
-                if (l.cursor = -1, m.innerHTML = "", _.length || d.noResults) {
+              return e.feedback instanceof Error ? c() : (ee(l, e), e.resultsList && function(u) {
+                var d = u.resultsList, m = u.list, b = u.resultItem, p = u.feedback, _ = p.matches, Q = p.results;
+                if (u.cursor = -1, m.innerHTML = "", _.length || d.noResults) {
                   var z = new DocumentFragment();
                   Q.forEach(function(G, $) {
-                    var H = b(y.tag, p({ id: "".concat(y.id, "_").concat($), role: "option", innerHTML: G.match, inside: z }, y.class && { class: y.class }));
-                    y.element && y.element(H, G);
-                  }), m.append(z), d.element && d.element(m, h), J(l);
-                } else N(l);
+                    var j = y(b.tag, h({ id: "".concat(b.id, "_").concat($), role: "option", innerHTML: G.match, inside: z }, b.class && { class: b.class }));
+                    b.element && b.element(j, G);
+                  }), m.append(z), d.element && d.element(m, p), J(u);
+                } else P(u);
               }(e), i.call(n));
-            } catch (l) {
-              return a(l);
+            } catch (u) {
+              return a(u);
             }
-          }, a) : (N(e), i.call(n));
+          }, a) : (P(e), i.call(n));
           function i() {
             return c();
           }
         });
       }
-      var D = function(e, r) {
+      var F = function(e, r) {
         for (var n in e) for (var c in e[n]) r(n, c);
       }, X = function(e) {
-        var r, n, c, a = e.events, s = (r = function() {
+        var r, n, c, a = e.events, l = (r = function() {
           return W(e);
         }, n = e.debounce, function() {
           clearTimeout(c), c = setTimeout(function() {
             return r();
           }, n);
-        }), u = e.events = p({ input: p({}, a && a.input) }, e.resultsList && { list: a ? p({}, a.list) : {} }), i = { input: { input: function() {
-          s();
+        }), s = e.events = h({ input: h({}, a && a.input) }, e.resultsList && { list: a ? h({}, a.list) : {} }), i = { input: { input: function() {
+          l();
         }, keydown: function(o) {
-          (function(l, d) {
-            switch (l.keyCode) {
+          (function(u, d) {
+            switch (u.keyCode) {
               case 40:
               case 38:
-                l.preventDefault(), l.keyCode === 40 ? O(d) : T(d);
+                u.preventDefault(), u.keyCode === 40 ? S(d) : T(d);
                 break;
               case 13:
-                d.submit || l.preventDefault(), d.cursor >= 0 && M(d, l);
+                d.submit || u.preventDefault(), d.cursor >= 0 && M(d, u);
                 break;
               case 9:
-                d.resultsList.tabSelect && d.cursor >= 0 && M(d, l);
+                d.resultsList.tabSelect && d.cursor >= 0 && M(d, u);
                 break;
               case 27:
-                d.input.value = "", S("clear", d), N(d);
+                d.input.value = "", E("clear", d), P(d);
             }
           })(o, e);
         }, blur: function() {
-          N(e);
+          P(e);
         } }, list: { mousedown: function(o) {
           o.preventDefault();
         }, click: function(o) {
-          (function(l, d) {
-            var m = d.resultItem.tag.toUpperCase(), y = Array.from(d.list.querySelectorAll(m)), h = l.target.closest(m);
-            h && h.nodeName === m && M(d, l, y.indexOf(h));
+          (function(u, d) {
+            var m = d.resultItem.tag.toUpperCase(), b = Array.from(d.list.querySelectorAll(m)), p = u.target.closest(m);
+            p && p.nodeName === m && M(d, u, b.indexOf(p));
           })(o, e);
         } } };
-        D(i, function(o, l) {
-          (e.resultsList || l === "input") && (u[o][l] || (u[o][l] = i[o][l]));
-        }), D(u, function(o, l) {
-          e[o].addEventListener(l, u[o][l]);
+        F(i, function(o, u) {
+          (e.resultsList || u === "input") && (s[o][u] || (s[o][u] = i[o][u]));
+        }), F(s, function(o, u) {
+          e[o].addEventListener(u, s[o][u]);
         });
       };
       function Y(e) {
         var r = this;
         return new Promise(function(n, c) {
-          var a, s, u;
-          if (a = e.placeHolder, u = { role: "combobox", "aria-owns": (s = e.resultsList).id, "aria-haspopup": !0, "aria-expanded": !1 }, b(e.input, p(p({ "aria-controls": s.id, "aria-autocomplete": "both" }, a && { placeholder: a }), !e.wrapper && p({}, u))), e.wrapper && (e.wrapper = b("div", p({ around: e.input, class: e.name + "_wrapper" }, u))), s && (e.list = b(s.tag, p({ dest: [s.destination, s.position], id: s.id, role: "listbox", hidden: "hidden" }, s.class && { class: s.class }))), X(e), e.data.cache) return V(e).then(function(o) {
+          var a, l, s;
+          if (a = e.placeHolder, s = { role: "combobox", "aria-owns": (l = e.resultsList).id, "aria-haspopup": !0, "aria-expanded": !1 }, y(e.input, h(h({ "aria-controls": l.id, "aria-autocomplete": "both" }, a && { placeholder: a }), !e.wrapper && h({}, s))), e.wrapper && (e.wrapper = y("div", h({ around: e.input, class: e.name + "_wrapper" }, s))), l && (e.list = y(l.tag, h({ dest: [l.destination, l.position], id: l.id, role: "listbox", hidden: "hidden" }, l.class && { class: l.class }))), X(e), e.data.cache) return V(e).then(function(o) {
             try {
               return i.call(r);
-            } catch (l) {
-              return c(l);
+            } catch (u) {
+              return c(u);
             }
           }, c);
           function i() {
-            return S("init", e), n();
+            return E("init", e), n();
           }
           return i.call(r);
         });
       }
-      function P(e) {
+      function I(e) {
         var r = e.prototype;
         r.init = function() {
           Y(this);
@@ -344,17 +344,17 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
             n.insertBefore(this.input, this.wrapper), n.removeChild(this.wrapper);
           }
           var c;
-          D((c = this).events, function(a, s) {
-            c[a].removeEventListener(s, c.events[a][s]);
+          F((c = this).events, function(a, l) {
+            c[a].removeEventListener(l, c.events[a][l]);
           });
         }, r.open = function() {
           J(this);
         }, r.close = function() {
-          N(this);
+          P(this);
         }, r.goTo = function(n) {
           x(n, this);
         }, r.next = function() {
-          O(this);
+          S(this);
         }, r.previous = function() {
           T(this);
         }, r.select = function(n) {
@@ -365,42 +365,42 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
       }
       return function e(r) {
         this.options = r, this.id = e.instances = (e.instances || 0) + 1, this.name = "autoComplete", this.wrapper = 1, this.threshold = 1, this.debounce = 0, this.resultsList = { position: "afterend", tag: "ul", maxResults: 5 }, this.resultItem = { tag: "li" }, function(n) {
-          var c = n.name, a = n.options, s = n.resultsList, u = n.resultItem;
-          for (var i in a) if (L(a[i]) === "object") for (var o in n[i] || (n[i] = {}), a[i]) n[i][o] = a[i][o];
+          var c = n.name, a = n.options, l = n.resultsList, s = n.resultItem;
+          for (var i in a) if (O(a[i]) === "object") for (var o in n[i] || (n[i] = {}), a[i]) n[i][o] = a[i][o];
           else n[i] = a[i];
-          n.selector = n.selector || "#" + c, s.destination = s.destination || n.selector, s.id = s.id || c + "_list_" + n.id, u.id = u.id || c + "_result", n.input = A(n.selector);
-        }(this), P.call(this, e), Y(this);
+          n.selector = n.selector || "#" + c, l.destination = l.destination || n.selector, l.id = l.id || c + "_list_" + n.id, s.id = s.id || c + "_result", n.input = A(n.selector);
+        }(this), I.call(this, e), Y(this);
       };
     }, f.exports = t();
   }(Z)), Z.exports;
 }
-var ie = ue();
-const ne = /* @__PURE__ */ le(ie);
-function oe(f, E, t) {
-  var F, B, q, U, J, N, x;
+var ie = se();
+const te = /* @__PURE__ */ ue(ie);
+function oe(f, L, t) {
+  var D, B, q, U, J, P, x;
   const C = document.createElement("div");
-  C.className = "no-results no-results-concept-schemes", C.innerHTML = ((F = t == null ? void 0 : t.noResults) == null ? void 0 : F.concepts) || "No concept schemes found";
+  C.className = "no-results no-results-concept-schemes", C.innerHTML = ((D = t == null ? void 0 : t.noResults) == null ? void 0 : D.concepts) || "No concept schemes found";
   const w = document.createElement("div");
   w.className = "error error-concept-schemes", w.innerHTML = ((B = t == null ? void 0 : t.errorMessages) == null ? void 0 : B.conceptSchemes) || "Error retrieving concept schemes";
-  const g = document.createElement("input"), p = document.createElement("input"), v = document.createElement("div"), L = document.createElement("div"), k = document.createElement("div"), A = document.createElement("div");
-  let b = null, j = null, I = null, S, R;
-  return typeof (t == null ? void 0 : t.inputClasses) == "string" ? S = R = t == null ? void 0 : t.inputClasses : (S = ((q = t == null ? void 0 : t.inputClasses) == null ? void 0 : q.conceptScheme) || "", R = ((U = t == null ? void 0 : t.inputClasses) == null ? void 0 : U.concept) || ""), g.className = "concept-scheme-input " + S, p.className = "concept-input " + R, v.className = "no-results no-results-concepts", L.className = "loading loading-concept-schemes", L.innerHTML = ((J = t == null ? void 0 : t.loading) == null ? void 0 : J.conceptSchemes) || "Loading...", f.append(L), k.style.display = "none", k.className = "loading loading-concepts", k.innerHTML = ((N = t == null ? void 0 : t.loading) == null ? void 0 : N.concepts) || "Loading concepts...", A.style.display = "none", A.className = "error error-concepts", A.innerHTML = ((x = t == null ? void 0 : t.errorMessages) == null ? void 0 : x.concepts) || "Error retrieving concepts", ae(E).then((O) => {
+  const g = document.createElement("input"), h = document.createElement("input"), v = document.createElement("div"), O = document.createElement("div"), k = document.createElement("div"), A = document.createElement("div");
+  let y = null, N = null, H = null, E, R;
+  return typeof (t == null ? void 0 : t.inputClasses) == "string" ? E = R = t == null ? void 0 : t.inputClasses : (E = ((q = t == null ? void 0 : t.inputClasses) == null ? void 0 : q.conceptScheme) || "", R = ((U = t == null ? void 0 : t.inputClasses) == null ? void 0 : U.concept) || ""), g.className = "concept-scheme-input " + E, h.className = "concept-input " + R, v.className = "no-results no-results-concepts", O.className = "loading loading-concept-schemes", O.innerHTML = ((J = t == null ? void 0 : t.loading) == null ? void 0 : J.conceptSchemes) || "Loading...", f.append(O), k.style.display = "none", k.className = "loading loading-concepts", k.innerHTML = ((P = t == null ? void 0 : t.loading) == null ? void 0 : P.concepts) || "Loading concepts...", A.style.display = "none", A.className = "error error-concepts", A.innerHTML = ((x = t == null ? void 0 : t.errorMessages) == null ? void 0 : x.concepts) || "Error retrieving concepts", ae(L).then((S) => {
     var X, Y;
-    if ((X = t == null ? void 0 : t.onConceptSchemesLoaded) == null || X.call(t, O), !O.length) {
+    if (t != null && t.conceptSchemeFilter && (S = S.filter(t.conceptSchemeFilter)), (X = t == null ? void 0 : t.onConceptSchemesLoaded) == null || X.call(t, S), !S.length) {
       f.append(C);
       return;
     }
-    v.style.display = "none", v.innerHTML = ((Y = t == null ? void 0 : t.noResults) == null ? void 0 : Y.concepts) || "No concepts found", p.style.display = "none", f.append(g), f.append(v), f.append(k), f.append(A), f.append(p);
-    const T = (P) => P.toLowerCase(), M = (P, e) => {
-      if (e.label.toLowerCase().includes(P))
+    v.style.display = "none", v.innerHTML = ((Y = t == null ? void 0 : t.noResults) == null ? void 0 : Y.concepts) || "No concepts found", h.style.display = "none", f.append(g), f.append(v), f.append(k), f.append(A), f.append(h);
+    const T = (I) => I.toLowerCase(), M = (I, e) => {
+      if (e.label.toLowerCase().includes(I))
         return e.label;
-    }, W = new ne({
+    }, W = new te({
       name: "rainbow-concept-schemes",
       selector: () => g,
       placeHolder: "Concept scheme",
       threshold: 0,
       data: {
-        src: () => O
+        src: () => S
       },
       query: T,
       searchEngine: M,
@@ -416,13 +416,16 @@ function oe(f, E, t) {
           focus() {
             W.start();
           },
-          async selection(P) {
+          async selection(I) {
             var r, n, c;
-            const e = P.detail.selection.value;
-            if (!(b && (e == null ? void 0 : e.uri) === b.uri) && (b = e, p.style.display = "none", p.value = "", v.style.display = "none", A.style.display = "none", b != null)) {
-              g.value = b.label, (r = t == null ? void 0 : t.onConceptSchemeSelected) == null || r.call(t, b), k.style.display = "";
+            const e = I.detail.selection.value;
+            if (!(y && (e == null ? void 0 : e.uri) === y.uri) && (y = e, h.style.display = "none", h.value = "", v.style.display = "none", A.style.display = "none", y != null)) {
+              g.value = y.label, (r = t == null ? void 0 : t.onConceptSchemeSelected) == null || r.call(t, y), k.style.display = "";
               try {
-                j = await se(E, b.uri), (n = t == null ? void 0 : t.onConceptSchemeLoaded) == null || n.call(t, b, j), j.length ? (p.style.display = "", p.focus(), D.start()) : v.style.display = "";
+                N = await le(L, y.uri), t != null && t.conceptFilter && (N = N.filter((a) => {
+                  var l;
+                  return (l = t == null ? void 0 : t.conceptFilter) == null ? void 0 : l.call(t, a, y);
+                })), (n = t == null ? void 0 : t.onConceptSchemeLoaded) == null || n.call(t, y, N), N.length ? (h.style.display = "", h.focus(), F.start()) : v.style.display = "";
               } catch (a) {
                 A.style.display = "", (c = t == null ? void 0 : t.onError) == null || c.call(t, "loadConcepts", a);
               } finally {
@@ -432,13 +435,13 @@ function oe(f, E, t) {
           }
         }
       }
-    }), D = new ne({
+    }), F = new te({
       name: "rainbow-concepts",
-      selector: () => p,
+      selector: () => h,
       placeHolder: "Concept",
       threshold: 0,
       data: {
-        src: () => j || []
+        src: () => N || []
       },
       query: T,
       searchEngine: M,
@@ -452,28 +455,28 @@ function oe(f, E, t) {
       events: {
         input: {
           focus() {
-            D.start();
+            F.start();
           },
-          selection(P) {
+          selection(I) {
             var e;
-            I = P.detail.selection.value, p.value = I.label, (e = t == null ? void 0 : t.onConceptSelected) == null || e.call(t, I);
+            H = I.detail.selection.value, h.value = H.label, (e = t == null ? void 0 : t.onConceptSelected) == null || e.call(t, H);
           }
         }
       }
     });
-  }).catch((O) => {
+  }).catch((S) => {
     var T;
-    f.append(w), (T = t == null ? void 0 : t.onError) == null || T.call(t, "loadConceptSchemes", O);
+    f.append(w), (T = t == null ? void 0 : t.onError) == null || T.call(t, "loadConceptSchemes", S);
   }).finally(() => {
-    f.removeChild(L);
+    f.removeChild(O);
   }), {
     reset: () => {
-      var O, T;
-      g.value = "", b = null, p.style.display = "none", p.value = "", v.style.display = "none", (O = t == null ? void 0 : t.onConceptSchemeSelected) == null || O.call(t, null), (T = t == null ? void 0 : t.onConceptSelected) == null || T.call(t, null);
+      var S, T;
+      g.value = "", y = null, h.style.display = "none", h.value = "", v.style.display = "none", (S = t == null ? void 0 : t.onConceptSchemeSelected) == null || S.call(t, null), (T = t == null ? void 0 : t.onConceptSelected) == null || T.call(t, null);
     },
     getSelection: () => ({
-      conceptScheme: b ? JSON.parse(JSON.stringify(b)) : null,
-      concept: I ? JSON.parse(JSON.stringify(I)) : null
+      conceptScheme: y ? JSON.parse(JSON.stringify(y)) : null,
+      concept: H ? JSON.parse(JSON.stringify(H)) : null
     })
   };
 }
